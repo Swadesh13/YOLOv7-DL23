@@ -1,6 +1,13 @@
 from pycocotools.coco import COCO
 from pycocotools.cocoeval import COCOeval
 import json
+import argparse
+
+parser = argparse.ArgumentParser()
+parser.add_argument('--gt-file', type=str, default='./test_gt.json', help='Test GT path')
+parser.add_argument('--pred-file', type=str, default='./test_pred.json', help='Test Pred path')
+opt = parser.parse_args()
+
 
 def coco_evaluation(gt_file, pred_file):
     # Initialize COCO ground truth API
@@ -17,8 +24,8 @@ def coco_evaluation(gt_file, pred_file):
     coco_eval.summarize()
 
 # File paths
-gt_file = 'C:/Users/ben93/Downloads/CombinedDatasetsChallenge/CombinedDatasetsChallenge/val_annotations.json'
-pred_file = 'C:/Users/ben93/PycharmProjects/yolov7/onnx_json_prediction.json'
+gt_file = opt.gt_file
+pred_file = opt.pred_file
 
 # Evaluate
 coco_evaluation(gt_file, pred_file)

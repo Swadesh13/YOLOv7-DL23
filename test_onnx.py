@@ -5,6 +5,7 @@ import numpy as np
 import onnxruntime as ort
 import cv2
 import json
+import argparse
 
 jdict = []
 
@@ -48,7 +49,7 @@ base_dir = opt.base_dir
 img_list = sorted(os.listdir(base_dir))
 print(img_list)
 if 'CUDAExecutionProvider' in ort.get_all_providers():
-    providers = ['CUDAExecutionProvider']
+    providers = ['CUExecutionProvider']
 else:
     providers = ['CPUExecutionProvider']
 session = ort.InferenceSession(w, providers=providers)
