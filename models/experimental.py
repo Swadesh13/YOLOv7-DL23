@@ -233,7 +233,10 @@ class End2End(nn.Module):
         self.model = model.to(device)
         self.model.model[-1].end2end = True
         self.patch_model = ONNX_TRT if max_wh is None else ONNX_ORT
-        self.end2end = self.patch_model(max_obj, iou_thres, score_thres, 1280 if convert_1280 else max_wh, device, n_classes)
+        if max_wh is None:
+            self.end2end = self.patch_model(max_obj, iou_thres, score_thres, max_wh, device, n_classes)
+        else:
+            self.end2end = self.patch_model(max_obj, iou_thres, score_thres, 1280 if convert_1280 else max_wh, device, n_classes)
         self.end2end.eval()
         self.convert_1280 = convert_1280
         if convert_1280:
