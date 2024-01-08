@@ -47,7 +47,10 @@ base_dir = opt.base_dir
 
 img_list = sorted(os.listdir(base_dir))
 print(img_list)
-providers = ['CPUExecutionProvider']
+if 'CUDAExecutionProvider' in ort.get_all_providers():
+    providers = ['CUDAExecutionProvider']
+else:
+    providers = ['CPUExecutionProvider']
 session = ort.InferenceSession(w, providers=providers)
 
 j=0
