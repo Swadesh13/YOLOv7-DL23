@@ -6,6 +6,7 @@ import onnxruntime as ort
 import cv2
 import json
 import argparse
+from tqdm import tqdm
 
 jdict = []
 
@@ -47,7 +48,7 @@ w = opt.weights
 base_dir = opt.base_dir
 
 img_list = sorted(os.listdir(base_dir))
-print(img_list)
+#print(img_list)
 if 'CUDAExecutionProvider' in ort.get_all_providers():
     providers = ['CUExecutionProvider']
 else:
@@ -56,12 +57,12 @@ session = ort.InferenceSession(w, providers=providers)
 
 j=0
 no_imgs = len(img_list)
-for img_path in img_list:
-    print(j, " of ", no_imgs)
+for img_path in tqdm(img_list):
+    #print(j, " of ", no_imgs)
     j+=1
 # img = cv2.imread(r<"C:\Users\ben93\Downloads\sample_imgs\coco_plus_other_000000423354.jpg")
     img = cv2.imread(os.path.join(base_dir,img_path))
-    print(img_path)
+    #print(img_path)
 
     names = ['boats','other']
     colors = {name:[random.randint(0, 255) for _ in range(3)] for i,name in enumerate(names)}
@@ -105,20 +106,20 @@ for img_path in img_list:
                       'bbox': [box[0],box[1],box[2]-box[0],box[3]-box[1]],
                       'score': score})
 
-        name = names[cls_id]
-        color = colors[name]
-        name += ' '+str(score)
-        cv2.rectangle(image,box[:2],box[2:],color,2)
-        cv2.putText(image,name,(box[0], box[1] - 2),cv2.FONT_HERSHEY_SIMPLEX,0.75,[225, 255, 255],thickness=2)
+        #name = names[cls_id]
+        #color = colors[name]
+        #name += ' '+str(score)
+        #cv2.rectangle(image,box[:2],box[2:],color,2)
+        #cv2.putText(image,name,(box[0], box[1] - 2),cv2.FONT_HERSHEY_SIMPLEX,0.75,[225, 255, 255],thickness=2)
 
-    if outputs.shape[0]==0:
-        cv2.imshow("image ", ori_images[0])
-    else:
-        cv2.imshow("image ", image)
-    cv2.waitKey(0)
+    #if outputs.shape[0]==0:
+        #cv2.imshow("image ", ori_images[0])
+    #else:
+        #cv2.imshow("image ", image)
+    #cv2.waitKey(0)
 
 
-print(jdict)
+#print(jdict)
 
 
 with open("onnx_json_prediction.json","w") as f:
