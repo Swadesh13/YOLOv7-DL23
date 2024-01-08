@@ -37,8 +37,13 @@ def letterbox(im, new_shape=(640, 640), color=(114, 114, 114), auto=True, scaleu
     return im, r, (dw, dh)
 
 
-w = r"C:\Users\ben93\PycharmProjects\yolov7\DL23\DL239\weights\best.onnx"
-base_dir = r"C:\Users\ben93\Downloads\CombinedDatasetsChallenge\CombinedDatasetsChallenge\images\val"
+parser = argparse.ArgumentParser()
+parser.add_argument('--weights', type=str, default='./model.onnx', help='weights path')
+parser.add_argument('--base-dir', type=str, default='./images/test', help='base test dir path')
+opt = parser.parse_args()
+
+w = opt.weights
+base_dir = opt.base_dir
 
 img_list = sorted(os.listdir(base_dir))
 print(img_list)
