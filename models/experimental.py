@@ -2,6 +2,7 @@ import numpy as np
 import random
 import torch
 import torch.nn as nn
+import torchvision
 
 from models.common import Conv, DWConv
 from utils.google_utils import attempt_download
@@ -225,7 +226,7 @@ class ONNX_TRT(nn.Module):
 
 class End2End(nn.Module):
     '''export onnx or tensorrt model with NMS operation.'''
-    def __init__(self, model, max_obj=100, iou_thres=0.45, score_thres=0.25, max_wh=None, device=None, n_classes=80):
+    def __init__(self, model, max_obj=100, iou_thres=0.45, score_thres=0.25, max_wh=None, device=None, n_classes=80, convert_1280=False):
         super().__init__()
         device = device if device else torch.device('cpu')
         assert isinstance(max_wh,(int)) or max_wh is None
@@ -234,10 +235,17 @@ class End2End(nn.Module):
         self.patch_model = ONNX_TRT if max_wh is None else ONNX_ORT
         self.end2end = self.patch_model(max_obj, iou_thres, score_thres, max_wh, device, n_classes)
         self.end2end.eval()
+        self.convert_1280 = convert_1280
+        if convert_1280:
+            self.resize = torchvision.transforms.Resize((1280, 1280))
 
     def forward(self, x):
+        if self.convert_1280:
+            self.resize(x)
         x = self.model(x)
         x = self.end2end(x)
+        if self.convert_1280:
+            x[:, [0,1,2,3]] = x[:, [0,1,2,3]] / 2.0
         return x
 
 
