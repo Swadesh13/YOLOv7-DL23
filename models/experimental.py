@@ -244,11 +244,14 @@ class End2End(nn.Module):
 
     def forward(self, x):
         if self.convert_1280:
-            self.resize(x)
+            x = self.resize(x)
         x = self.model(x)
         x = self.end2end(x)
         if self.convert_1280:
-            x[:, [1,2,3,4]] = x[:, [1,2,3,4]] / 2.0
+            x[:, 1] = x[:, 1] / 2.0
+            x[:, 2] = x[:, 2] / 2.0
+            x[:, 3] = x[:, 3] / 2.0
+            x[:, 4] = x[:, 4] / 2.0
         return x
 
 
