@@ -245,7 +245,7 @@ class End2End(nn.Module):
         x = self.model(x)
         x = self.end2end(x)
         if self.convert_1280:
-            x[:, [0,1,2,3]] = x[:, [0,1,2,3]] / 2.0
+            x[:, [1,2,3,4]] = x[:, [1,2,3,4]] / 2.0
         return x
 
 

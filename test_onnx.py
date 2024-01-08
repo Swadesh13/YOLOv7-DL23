@@ -57,7 +57,7 @@ for img_path in img_list:
     names = ['boats','other']
     colors = {name:[random.randint(0, 255) for _ in range(3)] for i,name in enumerate(names)}
 
-    # img = cv2.cvtColor(img, cv2.COLOR_BGR2RGB)
+    img = cv2.cvtColor(img, cv2.COLOR_BGR2RGB)
 
     image = img.copy()
     image, ratio, dwdh = letterbox(image, auto=False)
